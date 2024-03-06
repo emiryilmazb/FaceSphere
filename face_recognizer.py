@@ -1,6 +1,7 @@
 import cv2
 import numpy as np
 import os
+import subprocess
 
 if __name__ == "__main__":
     
@@ -72,11 +73,22 @@ if __name__ == "__main__":
     
         # Display the image with rectangles around faces
         cv2.imshow('camera', img)
-    
+        
         # Press Escape to exit the webcam / program
-        k = cv2.waitKey(10) & 0xff
-        if k == 27:
+        quit = cv2.waitKey(10) & 0xff
+        add_new = cv2.waitKey(10) & 0xff
+        if quit == 27:
             break
+        elif add_new == 38:
+            subprocess.run(["python", "face_taker.py"])
+            subprocess.run(["python", "face_train.py"])
+
+        
+
+
+
+
+
     
     print("\n [INFO] Exiting Program.")
     # Release the camera
