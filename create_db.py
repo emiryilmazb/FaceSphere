@@ -1,27 +1,38 @@
-from sqlalchemy import create_engine, Column, Integer, String
+from sqlalchemy import create_engine, Column, Integer, String, DateTime, ForeignKey
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm import relationship
 
-# SQLite veritabanı dosyası için bir engine oluşturun
-engine = create_engine('sqlite:///user.db', echo=True)  # my_database.db adında bir dosya oluşturur
 
-# Base sınıfını tanımlayın
 Base = declarative_base()
 
-# Veritabanı işlemleri için bir Session sınıfı oluşturun
-Session = sessionmaker(bind=engine)
-
-# Base sınıfını kullanarak tabloları tanımlayın
 class User(Base):
     __tablename__ = 'user'
+    id = Column(Integer, primary_key=True)
+    name = Column(String)
+    surname = Column(String)
+    phone = Column(String)
+    department = Column(String)
+    permission = Column(String)
+    photos = relationship("Photo", back_populates="user")
 
-    user_id = Column(Integer, primary_key=True, autoincrement=True)
-    user_name = Column(String)
-    user_surname = Column(String)
-    user_phone = Column(Integer)
-    user_department = Column(String)
-    user_permission = Column(Integer)
-    user_picture = Column() #TODO find a way to restore image data in sqllite
 
-# Veritabanı tablolarını oluşturun (eğer yoksa)
+class Photo(Base):
+    __tablename__ = 'photo'
+    id = Column(Integer, primary_key=True)
+    user_id = Column(Integer, ForeignKey('user.id'))  # Update table name here
+    file_path = Column(String)
+    user = relationship("User", back_populates="photo")
+
+class Attendence(Base):
+    __tablename__ = 'attendence'
+    id = Column(Integer, primary_key=True)
+    user_id = Column(Integer, ForeignKey('user.id'))
+    entry_time = Column(DateTime)
+    leave_time = Column(DateTime)
+    user = relationship("User", back_populates="attendence")
+# Veritabanı dosyasının konumu
+db_path = 'sqlite:///user_database.db'
+engine = create_engine(db_path)
+
+# Veritabanını oluştur
 Base.metadata.create_all(engine)
