@@ -11,6 +11,7 @@ class Camera:
     def get_frame(self):
         success, frame = self.camera.read()
         if not success:
+            print("Cannot reach the camera")
             return None
         
         gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
