@@ -1,0 +1,134 @@
+body {
+    background-color: #f8f9fa;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    margin: 0;
+    font-family: 'Roboto', sans-serif;
+    color: #333;
+}
+
+.card {
+    background-color: #ffffff;
+    border: none;
+    border-radius: 15px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    max-width: 600px;
+    width: 100%;
+    overflow: hidden;
+}
+
+.card-header {
+    background-color: #007bff;
+    color: #ffffff;
+    padding: 20px;
+    text-align: center;
+}
+
+    .card-header img {
+        width: 80px;
+        margin-bottom: 10px;
+    }
+
+    .card-header h1 {
+        font-size: 24px;
+        font-weight: 700;
+        margin-bottom: 0;
+        color: #ffffff;
+    }
+
+.card-body {
+    padding: 20px;
+    text-align: center;
+}
+
+.btn-custom {
+    background-color: #007bff;
+    color: #ffffff;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    font-size: 16px;
+    font-weight: 700;
+    margin: 10px 0;
+    transition: background-color 0.3s, transform 0.3s;
+    width: 100%;
+}
+
+    .btn-custom:hover {
+        background-color: #0056b3;
+        transform: scale(1.05);
+    }
+
+.login-section {
+    margin-top: 20px;
+}
+
+.error-message, .success-message {
+    display: none;
+    margin-top: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 1;
+    transition: opacity 0.5s ease-out;
+}
+
+    .error-message.fade-out, .success-message.fade-out {
+        opacity: 0;
+    }
+
+    .error-message i, .success-message i {
+        margin-right: 10px;
+    }
+
+.error-message {
+    color: #e74c3c;
+}
+
+.success-message {
+    color: #2ecc71;
+}
+
+.video-container {
+    text-align: center;
+    margin-top: 20px;
+}
+
+    .video-container img {
+        width: 100%;
+        max-width: 100%;
+        border-radius: 10px;
+        border: 2px solid #007bff;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+input.form-control {
+    background-color: #f8f9fa;
+    color: #333;
+    border: 1px solid #ccc;
+    font-size: 16px;
+    padding: 10px;
+    margin-bottom: 10px;
+}
+
+    input.form-control::placeholder {
+        color: #999;
+    }
+
+p {
+    color: #333;
+    margin: 10px 0;
+    font-size: 18px;
+}
+
+h1 {
+    font-size: 28px;
+    font-weight: 700;
+    margin-bottom: 20px;
+}
+
+#status {
+    margin-top: 20px;
+}

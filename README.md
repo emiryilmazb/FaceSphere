@@ -1,22 +1,37 @@
+# Flask-based Video Door Lock Application with 3D Face Scanning.
 # FaceSphere
-This will be the project repository for our face recognizing lock system
+
+## Setup
+
+1. Clone the repository.
+2. Navigate to the project directory.
+3. Make sure Python 3.12.3 is installed properly
+4. Activate the virtual enviroment:
+for windows
+    ```bash
+     .\venv\Scripts\activate
+    ```
+for Linux
+    ```
+source ./venv/bin/activate
+    ```
+4. Run the application:
+    ```bash
+    python app.py
+    ```
+
+## Usage
+
+- Access the web interface at `http://127.0.0.1:5000/`.
+- The webcam feed will be displayed on the page.
+- To add new users, navigate the users folder and create a folder as name_surname.
+- feel free to add many pictures that you want for a single user
+
+## Notes
+
+- Ensure your webcam is connected.
 
 
-ROADMAP
-#TODO
+## Security
 
-we should prepare 3 py files:
-
-face_taker.py --> opens camera and takes 10 picture with organized names and puts it in user_data folder
-face_train --> it should train itself according to user_data folder and save it
-face_recognizer --> this will be our main py file that recognize face and opens the lock
-
-After these changes done we should connect these three files so it can run automatise structure
-
-may we connect a database and edit face_taker and face_train according this so we can store more information other than user's picture
-
-may we try on raspberry pi for the control lock and edit face_recognizer according to use pins on rp
-
-may we connect an actual lock system to visualise our application
-
-may we consider to deploy our application and create endpoints so any device with camera that connect at the same server can use without any installation or further work 
+- Handle user data responsibly.

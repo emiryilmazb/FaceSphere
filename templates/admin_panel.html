@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Admin Panel</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: 'Roboto', sans-serif;
+            color: #333;
+        }
+
+        .card {
+            background-color: #ffffff;
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            max-width: 900px;
+            width: 100%;
+            overflow: hidden;
+        }
+
+        .card-header {
+            background-color: #007bff;
+            color: #ffffff;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .card-header h1 {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 0;
+            color: #ffffff;
+        }
+
+        .card-body {
+            padding: 20px;
+            text-align: center;
+        }
+
+        .btn-custom {
+            background-color: #007bff;
+            color: #ffffff;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 20px;
+            font-size: 16px;
+            font-weight: 700;
+            margin: 10px 0;
+            transition: background-color 0.3s, transform 0.3s;
+            width: 100%;
+        }
+
+        .btn-custom:hover {
+            background-color: #0056b3;
+            transform: scale(1.05);
+        }
+
+        .section {
+            display: none;
+            margin-top: 20px;
+        }
+
+        .error-message, .success-message {
+            display: none;
+            margin-top: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 1;
+            transition: opacity 0.5s ease-out;
+        }
+
+        .error-message.fade-out, .success-message.fade-out {
+            opacity: 0;
+        }
+
+        .error-message i, .success-message i {
+            margin-right: 10px;
+        }
+
+        .error-message {
+            color: #e74c3c;
+        }
+
+        .success-message {
+            color: #2ecc71;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+        }
+
+        th {
+            background-color: #007bff;
+            color: white;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        tr:hover {
+            background-color: #ddd;
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <div class="card-header">
+            <h1>Admin Panel</h1>
+        </div>
+        <div class="card-body">
+            <button class="btn-custom mt-3" onclick="showSection('user-details-section')">Show Users</button>
+            <div class="section" id="user-details-section">
+                <table>
+                    <tr>
+                        <th>ID</th>
+                        <th>First Name</th>
+                        <th>Last Name</th>
+                        <th>Department</th>
+                        <th>Phone Number</th>
+                        <th>Entry Time</th>
+                        <th>Exit Time</th>
+                        <th>Photo</th>
+                    </tr>
+                    {% for user in users %}
+                    <tr>
+                        <td>{{ user.id }}</td>
+                        <td>{{ user.first_name }}</td>
+                        <td>{{ user.last_name }}</td>
+                        <td>{{ user.department }}</td>
+                        <td>{{ user.phone_number }}</td>
+                        <td>{{ user.entry_time }}</td>
+                        <td>{{ user.exit_time }}</td>
+                        <td><img src="{{ user.photo_location }}" alt="User Photo" width="50"></td>
+                    </tr>
+                    {% endfor %}
+                </table>
+            </div>
+            <button class="btn-custom mt-3" onclick="showSection('add-user-section')">Add User</button>
+            <div class="section" id="add-user-section">
+                <h2>Add User</h2>
+                <input type="text" id="add_first_name" class="form-control" placeholder="First Name">
+                <input type="text" id="add_last_name" class="form-control" placeholder="Last Name">
+                <input type="text" id="add_department" class="form-control" placeholder="Department">
+                <input type="text" id="add_phone_number" class="form-control" placeholder="Phone Number">
+                <button style="background-color:green !important" class="btn-custom mt-3" onclick="addUser()">Add New User</button>
+                <p class="success-message" id="add_user_success" style="display: none;"><i class="fas fa-check-circle"></i> User added successfully!</p>
+                <p class="error-message" id="add_user_error" style="display: none;"><i class="fas fa-exclamation-circle"></i> Error adding user. Please try again.</p>
+            </div>
+            <button class="btn-custom mt-3" onclick="showSection('remove-user-section')">Remove User</button>
+
+
+            <div class="section" id="remove-user-section">
+                <h2>Remove User</h2>
+                <input type="text" id="user_id" name="user_id" class="form-control" placeholder="User ID">
+                <!-- Add the input field with name="user_id" -->
+                <button style="background-color:red !important" class="btn-custom mt-3" onclick="removeUser()">Remove User</button>
+                <p class="success-message" id="remove_user_success" style="display: none;"><i class="fas fa-check-circle"></i> User removed successfully!</p>
+                <p class="error-message" id="remove_user_error" style="display: none;"><i class="fas fa-exclamation-circle"></i> Error removing user. Please try again.</p>            
+            </div>
+            <!--
+            <button class="btn-custom mt-3" onclick="showSection('user-details-section')">Show Unauthorized Access Logs</button>
+            <div class="section" id="user-details-section">
+                <table>
+                    <tr>
+                        <th>ID</th>
+                        <th>Attempt Time</th>
+
+                    </tr>
+
+                    {% for logs in unauthorized_logs %}
+                    <tr>
+                        <td>{{ logs.id }}</td>
+                        <td>{{ logs.attempt_time }}</td>
+                    </tr>
+                    {% endfor %}
+                </table>
+            </div>-->
+            <button class="btn-custom mt-3" onclick="goToMainPage()">Back to Main Page</button>
+        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://kit.fontawesome.com/a076d05399.js"></script>
+    <script>
+        function showSection(sectionId) {
+            var sections = document.querySelectorAll('.section');
+            sections.forEach(section => {
+                section.style.display = 'none';
+            });
+            document.getElementById(sectionId).style.display = 'block';
+        }
+
+        function addUser() {
+            var firstName = document.getElementById('add_first_name').value;
+            var lastName = document.getElementById('add_last_name').value;
+            var department = document.getElementById('add_department').value;
+            var phoneNumber = document.getElementById('add_phone_number').value;
+            var entryTime = document.getElementById('add_entry_time').value; // Make sure to add entry_time input field
+            var exitTime = document.getElementById('add_exit_time').value; // Make sure to add exit_time input field
+            var photoLocation = document.getElementById('add_photo_location').value; // Make sure to add photo_location input field
+            var addUserSuccess = document.getElementById('add_user_success');
+            var addUserError = document.getElementById('add_user_error');
+        
+            addUserSuccess.style.display = 'none';
+            addUserError.style.display = 'none';
+        
+            fetch('/add_user', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    first_name: firstName,
+                    last_name: lastName,
+                    department: department,
+                    phone_number: phoneNumber,
+                    entry_time: entryTime, // Add entry_time to the request body
+                    exit_time: exitTime, // Add exit_time to the request body
+                    photo_location: photoLocation // Add photo_location to the request body
+                })
+            }).then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        addUserSuccess.style.display = 'flex';
+                        setTimeout(function () {
+                            addUserSuccess.classList.add('fade-out');
+                            setTimeout(function () {
+                                addUserSuccess.style.display = 'none';
+                                addUserSuccess.classList.remove('fade-out');
+                            }, 500);
+                        }, 2000);
+                        addUserError.style.display = 'none';
+                    } else {
+                        addUserSuccess.style.display = 'none';
+                        addUserError.style.display = 'flex';
+                        setTimeout(function () {
+                            addUserError.classList.add('fade-out');
+                            setTimeout(function () {
+                                addUserError.style.display = 'none';
+                                addUserError.classList.remove('fade-out');
+                            }, 500);
+                        }, 2000);
+                    }
+                }).catch(error => {
+                    addUserSuccess.style.display = 'none';
+                    addUserError.style.display = 'flex';
+                    setTimeout(function () {
+                        addUserError.classList.add('fade-out');
+                        setTimeout(function () {
+                            addUserError.style.display = 'none';
+                            addUserError.classList.remove('fade-out');
+                        }, 500);
+                    }, 2000);
+                });
+        }
+        function removeUser() {
+            var userId = document.getElementById('remove_user_id').value;
+            var removeUserSuccess = document.getElementById('remove_user_success');
+            var removeUserError = document.getElementById('remove_user_error');
+
+            removeUserSuccess.style.display = 'none';
+            removeUserError.style.display = 'none';
+
+            fetch('/remove_user', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ user_id: userId })
+            }).then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        removeUserSuccess.style.display = 'flex';
+                        setTimeout(function () {
+                            removeUserSuccess.classList.add('fade-out');
+                            setTimeout(function () {
+                                removeUserSuccess.style.display = 'none';
+                                removeUserSuccess.classList.remove('fade-out');
+                            }, 500);
+                        }, 2000);
+                        removeUserError.style.display = 'none';
+                    } else {
+                        removeUserSuccess.style.display = 'none';
+                        removeUserError.style.display = 'flex';
+                        setTimeout(function () {
+                            removeUserError.classList.add('fade-out');
+                            setTimeout(function () {
+                                removeUserError.style.display = 'none';
+                                removeUserError.classList.remove('fade-out');
+                            }, 500);
+                        }, 2000);
+                    }
+                }).catch(error => {
+                    removeUserSuccess.style.display = 'none';
+                    removeUserError.style.display = 'flex';
+                    setTimeout(function () {
+                        removeUserError.classList.add('fade-out');
+                        setTimeout(function () {
+                            removeUserError.style.display = 'none';
+                            removeUserError.classList.remove('fade-out');
+                        }, 500);
+                    }, 2000);
+                });
+        }
+
+        function goToMainPage() {
+            window.location.href = '/';
+        }
+    </script>
+</body>
+</html>
