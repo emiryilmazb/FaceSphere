@@ -13,9 +13,9 @@ for windows
     ```
 for Linux
     ```
-source ./venv/bin/activate
+    source ./venv/bin/activate
     ```
-4. Run the application:
+5. Run the application:
     ```bash
     python app.py
     ```
