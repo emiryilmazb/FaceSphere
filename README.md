@@ -15,6 +15,7 @@ for Linux
     ```
     source ./venv/bin/activate
     ```
+
 5. Run the application:
     ```bash
     python app.py
