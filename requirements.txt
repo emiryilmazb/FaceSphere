@@ -1,2 +1,8 @@
+flask
+flask-sqlalchemy
 opencv-python
 opencv-contrib-python
+numpy
+dlib
+deepface
+tf-keras

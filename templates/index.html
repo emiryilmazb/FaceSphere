@@ -1,36 +1,70 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
     <title>FaceSphere</title>
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="../static/css/styles.css">
-</head>
-<body>
+    <link
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../static/css/styles.css" />
+  </head>
+  <body>
     <div class="card">
-        <div class="card-header">
-            <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo">
-            <h1>Face Recognition System</h1>
+      <div class="card-header">
+        <img
+          src="{{ url_for('static', filename='images/logo.png') }}"
+          alt="Logo"
+        />
+        <h1>Face Recognition System</h1>
+      </div>
+      <div class="card-body">
+        <div class="video-container">
+          <img
+            id="video_feed"
+            src="{{ url_for('main.video_feed', camera_id=0) }}"
+            alt="Camera Feed"
+          />
         </div>
-        <div class="card-body">
-            <div class="video-container">
-                <img id="video_feed" src="{{ url_for('video_feed', camera_id=0) }}" alt="Camera Feed">
-            </div>
-            <div id="status" class="flex">
-                <h3>Current State: <span id="current-state">initial</span></h3>
-                <h3>User Name: <span id="user-name">None</span></h3>
-                <h3>Message: <span id="status-message">Initializing...</span></h3>
-            </div>
-            <button class="btn-custom mt-3" id="toggle_camera" onclick="toggleCamera()">Turn Camera Off</button>
-            <button class="btn-custom" onclick="toggleLoginSection()">Admin Login</button>
-            <div class="login-section" id="login-section" style="display: none;">
-                <input type="text" id="username" class="form-control" placeholder="Username">
-                <input type="password" id="password" class="form-control" placeholder="Password">
-                <button class="btn-custom mt-3" onclick="adminLogin()">Login</button>
-                <p class="error-message" id="login-error" style="display: none;"><i class="fas fa-exclamation-circle"></i> Invalid username or password</p>
-            </div>
+        <div id="status" class="flex">
+          <h3>Current State: <span id="current-state">initial</span></h3>
+          <h3>User Name: <span id="user-name">None</span></h3>
+          <h3>Message: <span id="status-message">Initializing...</span></h3>
         </div>
+        <button
+          class="btn-custom mt-3"
+          id="toggle_camera"
+          onclick="toggleCamera()"
+        >
+          Turn Camera Off
+        </button>
+        <button class="btn-custom" onclick="toggleLoginSection()">
+          Admin Login
+        </button>
+        <div class="login-section" id="login-section" style="display: none">
+          <input
+            type="text"
+            id="username"
+            class="form-control"
+            placeholder="Username"
+          />
+          <input
+            type="password"
+            id="password"
+            class="form-control"
+            placeholder="Password"
+          />
+          <button class="btn-custom mt-3" onclick="adminLogin()">Login</button>
+          <p class="error-message" id="login-error" style="display: none">
+            <i class="fas fa-exclamation-circle"></i> Invalid username or
+            password
+          </p>
+        </div>
+      </div>
     </div>
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
@@ -38,79 +72,84 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script src="https://kit.fontawesome.com/a076d05399.js"></script>
     <script>
-        let cameraOn = true;
+      let cameraOn = true;
 
-        function updateState() {
-            fetch('/state')
-                .then(response => response.json())
-                .then(data => {
-                    document.getElementById('current-state').textContent = data.state;
-                    document.getElementById('user-name').textContent = data.user_name || 'None';
-                    document.getElementById('status-message').textContent = data.message;
-                });
-        }
-        setInterval(updateState, 1000);  // Update the state every second
+      function updateState() {
+        fetch("/state")
+          .then((response) => response.json())
+          .then((data) => {
+            document.getElementById("current-state").textContent = data.state;
+            document.getElementById("user-name").textContent =
+              data.user_name || "None";
+            document.getElementById("status-message").textContent =
+              data.message;
+          });
+      }
+      setInterval(updateState, 1000); // Update the state every second
 
-        function adminLogin() {
-            var username = document.getElementById('username').value;
-            var password = document.getElementById('password').value;
-            var loginError = document.getElementById('login-error');
+      function adminLogin() {
+        var username = document.getElementById("username").value;
+        var password = document.getElementById("password").value;
+        var loginError = document.getElementById("login-error");
 
-            loginError.style.display = 'none';
+        loginError.style.display = "none";
 
-            fetch('/admin_login', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ username: username, password: password })
-            }).then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        window.location.href = '/admin_panel';
-                    } else {
-                        loginError.style.display = 'flex';
-                        setTimeout(function () {
-                            loginError.classList.add('fade-out');
-                            setTimeout(function () {
-                                loginError.style.display = 'none';
-                                loginError.classList.remove('fade-out');
-                            }, 500);
-                        }, 2000);
-                    }
-                }).catch(error => {
-                    loginError.style.display = 'flex';
-                    setTimeout(function () {
-                        loginError.classList.add('fade-out');
-                        setTimeout(function () {
-                            loginError.style.display = 'none';
-                            loginError.classList.remove('fade-out');
-                        }, 500);
-                    }, 2000);
-                });
-        }
-
-        function toggleCamera() {
-            const videoFeed = document.getElementById('video_feed');
-            const toggleButton = document.getElementById('toggle_camera');
-            if (cameraOn) {
-                videoFeed.src = '';
-                toggleButton.textContent = 'Turn Camera On';
+        fetch("/admin_login", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ username: username, password: password }),
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            if (data.success) {
+              window.location.href = "/admin_panel";
             } else {
-                videoFeed.src = '/video_feed';
-                toggleButton.textContent = 'Turn Camera Off';
+              loginError.style.display = "flex";
+              setTimeout(function () {
+                loginError.classList.add("fade-out");
+                setTimeout(function () {
+                  loginError.style.display = "none";
+                  loginError.classList.remove("fade-out");
+                }, 500);
+              }, 2000);
             }
-            cameraOn = !cameraOn;
-        }
+          })
+          .catch((error) => {
+            loginError.style.display = "flex";
+            setTimeout(function () {
+              loginError.classList.add("fade-out");
+              setTimeout(function () {
+                loginError.style.display = "none";
+                loginError.classList.remove("fade-out");
+              }, 500);
+            }, 2000);
+          });
+      }
 
-        function toggleLoginSection() {
-            var loginSection = document.getElementById('login-section');
-            loginSection.style.display = loginSection.style.display === 'block' ? 'none' : 'block';
+      function toggleCamera() {
+        const videoFeed = document.getElementById("video_feed");
+        const toggleButton = document.getElementById("toggle_camera");
+        if (cameraOn) {
+          videoFeed.src = "";
+          toggleButton.textContent = "Turn Camera On";
+        } else {
+          videoFeed.src = "/video_feed";
+          toggleButton.textContent = "Turn Camera Off";
         }
+        cameraOn = !cameraOn;
+      }
 
-        window.onload = function () {
-            document.getElementById('video_feed').src = '/video_feed';
-        };
+      function toggleLoginSection() {
+        var loginSection = document.getElementById("login-section");
+        loginSection.style.display =
+          loginSection.style.display === "block" ? "none" : "block";
+      }
+
+      window.onload = function () {
+        document.getElementById("video_feed").src = "/video_feed";
+      };
     </script>
-</body>
+  </body>
 </html>
